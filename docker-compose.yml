@@ -1,0 +1,58 @@
+version: '3.3'
+services:
+  database:
+    image: mysql:5.7
+    volumes:
+      - ./database/db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/procedures.sql:/docker-entrypoint-initdb.d/procedures.sql
+    restart: always
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - database_network
+      - admin_network
+  
+  visualizer:
+    image: grafana/grafana
+    ports:
+      - '80:3000'
+    volumes:
+      - ${PWD}/grafana/storage:/var/lib/grafana
+      - ${PWD}/grafana/provisioning:/etc/grafana/provisioning
+      - ${PWD}/grafana.ini:/etc/grafana/grafana.ini
+    depends_on:
+      - database
+    networks:
+      - database_network
+  
+  server:
+    build: server
+    depends_on:
+      - database
+    networks:
+      - server_network
+      - database_network
+
+  admin:
+    build: admin
+    depends_on:
+      - database
+      - server
+    networks:
+      - admin_network
+  
+  banking:
+    build: bank
+    depends_on:
+      - database
+    networks:
+      - server_network
+      - database_network
+
+networks:
+  server_network:
+  database_network:
+  admin_network:
