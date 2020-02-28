@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            #instruments table{
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            }
+
+            #instruments th {
+                padding: 8px;
+            }
+            #instruments tr {
+                height: 50px;
+            }
+            #instruments tr:nth-child(even){background-color: #f2f2f2;}
+
+            #instruments tr:hover {background-color: #ddd; cursor: pointer;}
+
+            #instruments th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: rgb(78, 14, 253);
+            color: white;
+            }
+            input[type=submit] {
+                width: 20%;
+                background-color: #1c0f96;
+                color: white;
+                padding: 14px 20px;
+                margin: 8px 0;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            input[type=submit]:hover {
+                background-color: #322794;
+            }
+        </style>
+        <title>RentAbAss</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+        <script type="text/javascript">
+            // define the function 
+
+            function table_instrument(document, instrument) {
+                var tr = document.createElement("tr")
+                var td0 = document.createElement("td"); tr.appendChild(td0); td0.appendChild(document.createTextNode(instrument.id))
+                td0.style.display = "none"
+                var td1 = document.createElement("td"); tr.appendChild(td1); td1.appendChild(document.createTextNode(instrument.vendor))
+                var td2 = document.createElement("td"); tr.appendChild(td2); td2.appendChild(document.createTextNode(instrument.name))
+                var td3 = document.createElement("td"); tr.appendChild(td3); td3.appendChild(document.createTextNode(instrument.type))
+                var td4 = document.createElement("td"); tr.appendChild(td4); td4.appendChild(document.createTextNode(instrument.cond))
+                var td5 = document.createElement("td"); tr.appendChild(td5); td5.appendChild(document.createTextNode(instrument.fabrication_year))
+                var td6 = document.createElement("td"); tr.appendChild(td6); td6.appendChild(document.createTextNode(instrument.nr_items))
+                var td7 = document.createElement("td"); tr.appendChild(td7); td7.appendChild(document.createTextNode(instrument.price_per_day))
+                return tr;
+            }
+            
+            async function createTable() {
+                var container = document.getElementById("instruments");
+                container.className="instruments"
+                var table = document.createElement("table");
+                var tr = document.createElement("tr"); table.appendChild(tr);
+                var th0 = document.createElement("th"); tr.appendChild(th0); th0.appendChild(document.createTextNode("id"));
+                th0.style.display = "none"
+                var th1 = document.createElement("th"); tr.appendChild(th1); th1.appendChild(document.createTextNode("Vendor"));
+                var th2 = document.createElement("th"); tr.appendChild(th2); th2.appendChild(document.createTextNode("Name"));
+                var th3 = document.createElement("th"); tr.appendChild(th3); th3.appendChild(document.createTextNode("Type"));
+                var th4 = document.createElement("th"); tr.appendChild(th4); th4.appendChild(document.createTextNode("Condition"));
+                var th5 = document.createElement("th"); tr.appendChild(th5); th5.appendChild(document.createTextNode("Fabrication year"));
+                var th6 = document.createElement("th"); tr.appendChild(th6); th6.appendChild(document.createTextNode("Nr. Available"));
+                var th7 = document.createElement("th"); tr.appendChild(th7); th7.appendChild(document.createTextNode("Price per day"));
+                let response = await fetch("http://localhost:8000/mainpage");
+                let instruments = await response.json()
+                for (var i=0; i < instruments.length; i++){
+                    var row = table_instrument(document, instruments[i]);
+                    var createClickHandler = function(row) {
+                        return function() {
+                            window.location.href = 'http://localhost:8000/buyform'
+                            fetch('http://localhost:8000/buyproduct', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    "id": row.getElementsByTagName("td")[0].innerHTML,
+                                    "vendor": row.getElementsByTagName("td")[1].innerHTML,
+                                    "name": row.getElementsByTagName("td")[2].innerHTML,
+                                    "type": row.getElementsByTagName("td")[3].innerHTML,
+                                    "condition": row.getElementsByTagName("td")[4].innerHTML,
+                                    "fabrication_year": row.getElementsByTagName("td")[5].innerHTML,
+                                    "nr_available": row.getElementsByTagName("td")[6].innerHTML,
+                                    "price_per_day": row.getElementsByTagName("td")[7].innerHTML,
+                                    })
+                            })
+                            // console.log(id);
+                            // maybe attempt to buy item
+                        };
+                    };
+                    row.onclick = createClickHandler(row);
+                    table.appendChild(row)
+                }
+                container.appendChild(table);
+            }
+
+            window.onload = createTable;
+        </script>
+
+    </head>
+    
+    <body>
+        <div style="display: flex; justify-content: space-between;">
+        <input type="submit" value="Profile" onclick="window.location='/profile';" />
+        <input type="submit" value="Logout" onclick="window.location='/';" />
+        </div>
+        <br><br>
+        <div id="instruments"></div>
+    </body>
+</html>

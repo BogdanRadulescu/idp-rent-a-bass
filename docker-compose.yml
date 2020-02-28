@@ -35,6 +35,8 @@ services:
     networks:
       - server_network
       - database_network
+    ports:
+      - '8000:8000'
 
   admin:
     build: admin

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            table{
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            }
+
+            th {
+                padding: 8px;
+            }
+            tr {
+                height: 50px;
+            }
+            tr:nth-child(even){background-color: #f2f2f2;}
+
+            tr:hover {background-color: #ddd; cursor: pointer;}
+
+            th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: rgb(78, 14, 253);
+            color: white;
+            }
+            input[type=submit] {
+                width: 20%;
+                background-color: #1c0f96;
+                color: white;
+                padding: 14px 20px;
+                margin: 8px 0;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            input[type=submit]:hover {
+                background-color: #322794;
+            }
+        </style>
+        <title>RentAbAss</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+        <script type="text/javascript">
+            
+            function createRentedTable(rented) {
+                table = document.getElementById('rentedtable')
+                for (var i = 0; i < rented.length; i++) {
+                    let row = document.createElement('tr')
+                    table.appendChild(row)
+                    var td0 = document.createElement("td"); row.appendChild(td0); td0.appendChild(document.createTextNode(rented[i].buyer))
+                    var td1 = document.createElement("td"); row.appendChild(td1); td1.appendChild(document.createTextNode(rented[i].nr))
+                }
+            }
+
+            function createBalanceTable(balance) {
+                table = document.getElementById('balancetable')
+                for (var i = 0; i < balance.length; i++) {
+                    let row = document.createElement('tr')
+                    table.appendChild(row)
+                    var td = document.createElement("td"); row.appendChild(td); td.appendChild(document.createTextNode(balance[i].uname))
+                    var td0 = document.createElement("td"); row.appendChild(td0); td0.appendChild(document.createTextNode(balance[i].name))
+                    var td1 = document.createElement("td"); row.appendChild(td1); td1.appendChild(document.createTextNode(balance[i].type))
+                    var td2 = document.createElement("td"); row.appendChild(td2); td2.appendChild(document.createTextNode(balance[i].price_per_day))
+                    var td3 = document.createElement("td"); row.appendChild(td3); td3.appendChild(document.createTextNode(balance[i].nr))
+                }
+            }
+
+            async function createTables() {
+                let response = await fetch("http://localhost:8000/get-rented-instruments");
+                let rented = await response.json()
+                response = await fetch("http://localhost:8000/get-balance");
+                let balance = await response.json()
+                createRentedTable(rented)
+                createBalanceTable(balance)
+            }
+
+            window.onload = createTables;
+        </script>
+
+    </head>
+    
+    <body>
+        <div style="display: flex; justify-content: space-between;">
+        <input type="submit" value="View all instruments" onclick="window.location='/loggedin';" />
+        <input type="submit" value="Logout" onclick="window.location='/';" />
+        </div>
+        <br><br>
+        <h2>Rented instruments</h2>
+        <table id="rentedtable">
+            <tr>
+                <th>Buyer</th>
+                <th>Nr</th>
+            </tr>
+        </table>
+        <br><br>
+        <h2>Daily balance</h2>
+        <table id="balancetable">
+            <tr>
+                <th>Rented by/from</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Price per day</th>
+                <th>Duration</th>
+            </tr>
+        </table>
+    </body>
+</html>

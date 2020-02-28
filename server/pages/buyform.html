@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            input[type=text], select {
+                width: 100%;
+                padding: 12px 20px;
+                margin: 8px 0;
+                display: inline-block;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+
+            input[type=submit] {
+                width: 100%;
+                background-color: #1c0f96;
+                color: white;
+                padding: 14px 20px;
+                margin: 8px 0;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            input[type=submit]:hover {
+                background-color: #3f3697;
+            }
+
+            div {
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 20px;
+            }
+        </style>
+        <title>RentAbAss</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+        <script type="text/javascript">
+            // define the function 
+
+            async function build_form() {
+                let values = await (await fetch('http://localhost:8000/buyform', {method: 'POST'})).json()
+                vendorContainer = document.getElementById("vendorinput")
+                vendorContainer.placeholder=values.vendor
+                nameContainer = document.getElementById("nameinput")
+                nameContainer.placeholder = values.name
+                typeContainer = document.getElementById("typeinput")
+                typeContainer.placeholder = values.type
+                conditionContainer = document.getElementById("conditioninput")
+                conditionContainer.placeholder = values.condition
+                fabricationyearContainer = document.getElementById("fabricationyearinput")
+                fabricationyearContainer.placeholder = values.fabrication_year
+                nravailableContainer = document.getElementById("nravailableinput")
+                nravailableContainer.placeholder = values.nr_available
+                priceperdayContainer = document.getElementById("priceperdayinput")
+                priceperdayContainer.placeholder = values.price_per_day
+                daystorentContainer = document.getElementById("daystorentinput")
+                daystorentContainer.placeholder = 1
+                daystorentContainer.value = 1
+            }
+            window.onload = build_form;
+        </script>
+
+    </head>
+    
+    <body>
+        <div>
+            <form action="/reserve-instrument" method="GET">
+            
+              <label for="vendorinput">Vendor</label>
+              <input type="text" id="vendorinput" name="vendor" disabled="disabled">
+
+              <label for="nameinput">Instrument Name</label>
+              <input type="text" id="nameinput" name="name" disabled="disabled">
+
+              <label for="typeinput">Instrument type</label>
+              <input type="text" id="typeinput" name="type" disabled="disabled">
+
+              <label for="conditioninput">Condition</label>
+              <input type="text" id="conditioninput" name="condition" disabled="disabled">
+
+              <label for="fabricationyearinput">Fabrication year</label>
+              <input type="text" id="fabricationyearinput" name="fabricationyear" disabled="disabled">
+
+              <label for="nravailableinput">Nr. available</label>
+              <input type="text" id="nravailableinput" name="nravailable" disabled="disabled">
+
+              <label for="priceperdayinput">Price per day</label>
+              <input type="text" id="priceperdayinput" name="priceperday" disabled="disabled">
+
+              <label for="daystorentinput">Days to rent</label>
+              <input type="text" id="daystorentinput" name="daystorent">
+
+              <input type="submit" value="Rent it already!">
+            </form>
+        </div>
+    </body>
+</html>
