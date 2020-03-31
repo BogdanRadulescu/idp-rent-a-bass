@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
         <style>
             #instruments table{
             font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -78,6 +79,9 @@
                 let response = await fetch("http://localhost:8000/mainpage");
                 let instruments = await response.json()
                 for (var i=0; i < instruments.length; i++){
+                    if (instruments[i].nr_items <= 0) {
+                        continue;
+                    }
                     var row = table_instrument(document, instruments[i]);
                     var createClickHandler = function(row) {
                         return function() {

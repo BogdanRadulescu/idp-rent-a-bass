@@ -1,2 +1,4 @@
 sanic
 mysql-connector-python
+requests
+simple-crypt

@@ -7,18 +7,24 @@ create table users (
     UNIQUE (username),
     PRIMARY KEY (id)
 );
-
+create table bank (
+    account_number varchar(50),
+    account_secret varchar(50),
+    account_balance INTEGER,
+    PRIMARY KEY (account_number)
+);
 create table user_information (
     id varchar(50),
     userid varchar(50) not null,
     first_name text not null,
     last_name text not null,
-    credit INTEGER not null,
+    account_number varchar(50) not null,
     address text,
     date_of_birth date,
     preferred_instrument text,
     PRIMARY KEY (id),
-    FOREIGN KEY (userid) REFERENCES users (id)
+    FOREIGN KEY (userid) REFERENCES users (id),
+    FOREIGN KEY (account_number) REFERENCES bank (account_number)
 );
 
 create table instruments (

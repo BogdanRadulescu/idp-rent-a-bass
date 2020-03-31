@@ -18,7 +18,7 @@ services:
   visualizer:
     image: grafana/grafana
     ports:
-      - '80:3000'
+      - '3000:3000'
     volumes:
       - ${PWD}/grafana/storage:/var/lib/grafana
       - ${PWD}/grafana/provisioning:/etc/grafana/provisioning
@@ -45,14 +45,18 @@ services:
       - server
     networks:
       - admin_network
+    ports:
+      - '8009:8009'
   
-  banking:
+  bank:
     build: bank
     depends_on:
       - database
     networks:
       - server_network
       - database_network
+    ports:
+      - '8008:8008'
 
 networks:
   server_network:
