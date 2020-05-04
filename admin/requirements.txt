@@ -1,0 +1,3 @@
+sanic
+mysql-connector-python
+requests
